@@ -3,8 +3,8 @@
     var assets;
     var stage;
     var w, h;
-    var sky, grant, ground, hill, hill2;
-    var runningRate, isInWarp, isStationary;
+    var sky, wendi, ground, hill, hill2;
+    var runningRate, isInWarp, isStationary, groundHeight, lowerWendi;
     var stationaryPosition, isPassed;
 
     acidgame.init = function() {
@@ -22,30 +22,43 @@
         isStationary = false;
         stationaryPosition = 300;
         isPassed = false;
+        groundHeight = 79;
+        lowerWendi = 7;
 
-        spriteSheet ={"animations": {"run": [0, 25], "jump": [26, 63]}, "images": ["img/runningGrant.png"], "frames": {"regX": 0, "height": 292.5, "count": 64, "regY": 0, "width": 165.75}};
+        spriteSheet ={
+            "animations": {
+                "run": [0, 9, "run", 2],
+                "jump": {
+                    frames: [0,1,2,12,12,12,12,12],
+                    frequency: 2
+                }
+            },
+            "images": ["img/wendi/wendiWalk.png","img/wendi/wendiJump.png"],
+            "frames": {"height": 125, "width": 125}
+        };
 
         var ss = new createjs.SpriteSheet(spriteSheet);
-        grant = new createjs.BitmapAnimation(ss);
+        wendi = new createjs.BitmapAnimation(ss);
 
         // Set up looping
         ss.getAnimation("run").next = "run";
         ss.getAnimation("jump").next = "run";
-        grant.gotoAndPlay("run");
-
-        // Position the Grant sprite
-        grant.x = -200;
-        grant.y = 90;
-        grant.scaleX = grant.scaleY = 0.8;
+        wendi.gotoAndPlay("run");
 
         // grab canvas width and height for later calculations:
         w = canvas.width;
         h = canvas.height;
 
+        // Position the Wendi sprite
+        wendi.x = -200;
+        wendi.y = h-125-groundHeight+lowerWendi;
+        wendi.scaleX = wendi.scaleY = 1.0;
+
         assets = [];
 
         manifest = [
-            {src:"img/runningGrant.png", id:"grant"},
+            {src:"img/wendi/wendiWalk.png", id:"wendi"},
+            {src:"img/wendi/wendiJump.png", id:"wendiJump"},
             {src:"img/sky.png", id:"sky"},
             {src:"img/ground.png", id:"ground"},
             {src:"img/parallaxHill1.png", id:"hill"},
@@ -81,8 +94,8 @@
                     ground = new createjs.Shape();
                     var g = ground.graphics;
                     g.beginBitmapFill(result);
-                    g.drawRect(0, 0, w+330, 79);
-                    ground.y = h-79;
+                    g.drawRect(0, 0, w+330, groundHeight);
+                    ground.y = h-groundHeight;
                     break;
                 case "hill":
                     hill = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,282,59));
@@ -101,12 +114,12 @@
 
         document.getElementById("loader").className = "";
 
-        if (grant == null) {
-            //console.log("Can not play. Grant sprite was not loaded.");
+        if (wendi == null) {
+            //console.log("Can not play. Wendi sprite was not loaded.");
             return;
         }
 
-        stage.addChild(sky, ground, hill, hill2, grant);
+        stage.addChild(sky, ground, hill, hill2, wendi);
         stage.addEventListener("stagemousedown", handleJumpStart);
 
         createjs.Ticker.setFPS(40);
@@ -114,13 +127,13 @@
     }
 
     function handleJumpStart() {
-        grant.gotoAndPlay("jump");
+        wendi.gotoAndPlay("jump");
     }
 
     function tick() {
         var outside = w + 20;
-        var position = grant.x+runningRate;
-        grant.x = (position >= outside) ? -200 : position;
+        var position = wendi.x+runningRate;
+        wendi.x = (position >= outside) ? -200 : position;
 
         ground.x = (ground.x-15) % 330;
         hill.x = (hill.x - 0.8);
