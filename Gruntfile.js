@@ -1,7 +1,7 @@
 /*global module:false*/
 module.exports = function(grunt) {
-    var libFiles = ['lib/jquery-2.0.0.js', 'lib/easeljs-0.6.0.min.js'],
-        appFiles = [],
+    var libFiles = ['lib/jquery-2.0.0.js', 'lib/PreloadJS/lib/preloadjs-0.3.1.min.js', 'lib/EaselJS/lib/easeljs-0.6.0.min.js'],
+        appFiles = ['src/js/app.js'],
         allFiles = ['dist/all-libs-tmp.js', 'dist/app-tmp.js'];
 
     // Project configuration.
@@ -53,8 +53,11 @@ module.exports = function(grunt) {
             js: {
                 files: [{expand: true, cwd: 'src/js/', src: ['**'], dest: 'dist/js/'}]
             },
-            images: {
-                files: [{expand: true, cwd: 'src/img/', src: ['**/*.css', '**/*.{svg,png,gif,jpg,ico}'], dest: 'dist/brand/'}]
+            img: {
+                files: [{expand: true, cwd: 'src/img/', src: ['**/*.css', '**/*.{svg,png,gif,jpg,ico}'], dest: 'dist/img/'}]
+            },
+            html: {
+                files: [{expand: true, cwd: 'src/', src: ['*.html'], dest: 'dist/'}]
             }
         },
 
@@ -62,13 +65,11 @@ module.exports = function(grunt) {
             zip: {
                 options: {
                     mode: 'tgz',
-                    archive: 'assets.tgz'
+                    archive: 'acid.tgz'
                 },
-                files: [{expand: true, cwd: 'dist', src: ['**'], dest: 'acid/'}]
+                files: [{expand: true, cwd: 'dist', src: ['**'], dest: 'dist/'}]
             }
-        },
-
-        uglify: {}
+        }
 
     });
 
@@ -82,6 +83,6 @@ module.exports = function(grunt) {
     // load the task in the tasks dir
     grunt.loadTasks('tasks');
 
-    grunt.registerTask('default', ['clean:prebuild', 'less', 'concat:all_libs_tmp', 'clean:postbuild', 'copy:js', 'copy:brand', 'compress']);
+    grunt.registerTask('default', ['clean:prebuild', 'less', 'concat:all_libs_tmp', 'concat:app_tmp', 'concat:all', 'clean:postbuild', 'copy:js', 'copy:img', 'copy:html']);
 
 };
