@@ -3,8 +3,8 @@
     var assets;
     var stage;
     var w, h;
-    var sky, wendi, ground, hill, hill2;
-    var runningRate, isInWarp, isStationary, groundHeight, lowerWendi;
+    var sky, wendi, wendiPhysics, ground, hill, hill2;
+    var runningRate, fps, isInWarp, isStationary, groundHeight, lowerWendi, pixelsPerBlock;
     var stationaryPosition, isPassed;
 
     acidgame.init = function() {
@@ -17,21 +17,25 @@
         var canvas = document.getElementById("testCanvas")
         stage = new createjs.Stage(canvas);
 
-        runningRate = 2.5;
+        runningRate = 2.5;  // blocks per second
+        fps = 40;
         isInWarp = false;
         isStationary = false;
         stationaryPosition = 300;
         isPassed = false;
         groundHeight = 79;
         lowerWendi = 7;
+        pixelsPerBlock = 40;
 
         spriteSheet ={
             "animations": {
                 "run": [0, 9, "run", 2],
                 "jump": {
-                    frames: [0,1,2,12,12,12,12,12],
+                    frames: [0, 1, 2],
+                    next: "airborne",
                     frequency: 2
-                }
+                },
+                "airborne": 12
             },
             "images": ["img/wendi/wendiWalk.png","img/wendi/wendiJump.png"],
             "frames": {"height": 125, "width": 125}
@@ -41,13 +45,13 @@
         wendi = new createjs.BitmapAnimation(ss);
 
         // Set up looping
-        ss.getAnimation("run").next = "run";
-        ss.getAnimation("jump").next = "run";
         wendi.gotoAndPlay("run");
 
         // grab canvas width and height for later calculations:
         w = canvas.width;
         h = canvas.height;
+
+        acidgame.physics.init(wendi, h - groundHeight, pixelsPerBlock, fps);
 
         // Position the Wendi sprite
         wendi.x = -200;
@@ -114,26 +118,37 @@
 
         document.getElementById("loader").className = "";
 
-        if (wendi == null) {
-            //console.log("Can not play. Wendi sprite was not loaded.");
-            return;
-        }
+        wendiPhysics = acidgame.physics.getCharacter();
+
+        acidgame.physics.setVelocity(wendiPhysics, runningRate, 0);
 
         stage.addChild(sky, ground, hill, hill2, wendi);
         stage.addEventListener("stagemousedown", handleJumpStart);
 
-        createjs.Ticker.setFPS(40);
+        createjs.Ticker.setFPS(fps);
         createjs.Ticker.addEventListener("tick", tick);
     }
 
     function handleJumpStart() {
+        acidgame.physics.setVelocity(wendiPhysics, runningRate, 20);
+        acidgame.physics.setAcceleration(wendiPhysics, 0, -1);
+        acidgame.physics.setAirborne(wendiPhysics, true);
         wendi.gotoAndPlay("jump");
     }
 
+    function handleJumpStop() {
+        wendi.gotoAndPlay("run");
+    }
+
     function tick() {
-        var outside = w + 20;
-        var position = wendi.x+runningRate;
-        wendi.x = (position >= outside) ? -200 : position;
+        var outside = w + 20, wasAirborne = wendiPhysics.isAirborne;
+        wendiPhysics.rectangle.x = (wendiPhysics.rectangle.x >= outside / pixelsPerBlock) ? -5 : wendiPhysics.rectangle.x;
+
+        acidgame.physics.run();
+
+        if (wasAirborne && !wendiPhysics.isAirborne) {
+            handleJumpStop();
+        }
 
         ground.x = (ground.x-15) % 330;
         hill.x = (hill.x - 0.8);
