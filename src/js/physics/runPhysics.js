@@ -14,7 +14,10 @@
         groundHeight = ground;
         pixelsPerBlock = pxlsPerBlck;
         framesPerSecond = fps;
-        character = acidgame.physics.addRectangleObject(characterSprite, 'character', -5, 0)
+        character = acidgame.physics.addRectangleObject(characterSprite, 'character', 1, 0);
+        acidgame.physics.setVelocity(character, 0, 0);
+        acidgame.physics.setAcceleration(character, 0, 0);
+        character.directionMultiplier = 1;
     };
 
     acidgame.physics.addRectangleObject = function(sprite, hitboxName, x, y) {
@@ -43,6 +46,9 @@
                 current.val.rectangle.y = 0;
                 current.val.acceleration[1] = 0;
                 current.val.velocity[1] = 0;
+                if(current.val.onGroundCollision) {
+                    current.val.onGroundCollision(); // perhpas make some sort of event handler if more of these are added.
+                }
             }
 
             // Check other collisions
@@ -96,8 +102,24 @@
         physicsObject.velocity = vec2.fromValues(x / framesPerSecond, y / framesPerSecond);
     };
 
+    acidgame.physics.setXVelocity = function(physicsObject, x) {
+        physicsObject.velocity[0] = x / framesPerSecond;
+    };
+
+    acidgame.physics.setYVelocity = function(physicsObject, y) {
+        physicsObject.velocity[1] = y / framesPerSecond;
+    };
+
     acidgame.physics.setAcceleration = function(physicsObject, x, y) {
-        physicsObject.acceleration = vec2.fromValues(x / framesPerSecond, y / framesPerSecond);
+        physicsObject.acceleration = vec2.fromValues(x / framesPerSecond / framesPerSecond, y / framesPerSecond / framesPerSecond);
+    };
+
+    acidgame.physics.setXAcceleration = function(physicsObject, x) {
+        physicsObject.acceleration[0] = x / framesPerSecond / framesPerSecond;
+    };
+
+    acidgame.physics.setYAcceleration = function(physicsObject, y) {
+        physicsObject.acceleration[1] = y / framesPerSecond / framesPerSecond;
     };
 
     acidgame.physics.setAirborne = function(physicsObject, air) {
@@ -105,7 +127,7 @@
     };
 
     acidgame.physics.setSprite = function(physicsObject) {
-        physicsObject.sprite.x = physicsObject.rectangle.x * pixelsPerBlock;
+        physicsObject.sprite.x = physicsObject.rectangle.x * pixelsPerBlock + ((physicsObject.directionMultiplier && physicsObject.directionMultiplier < 0) ? physicsObject.sprite.getBounds().width: 0);
         physicsObject.sprite.y = groundHeight - physicsObject.rectangle.y * pixelsPerBlock - physicsObject.rectangle.height * pixelsPerBlock;
 
         if (physicsObject.hitbox) {
