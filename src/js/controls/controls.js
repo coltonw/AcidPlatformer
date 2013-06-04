@@ -89,10 +89,12 @@
     }
 
     function handleJumpStart() {
-        var xAcceleration;
+        var xAcceleration = 0;
         if (!character.isAirborne) {
             acidgame.physics.setYVelocity(character, initialJumpVelocity);
-            var xAcceleration = (character.acceleration[0] ? character.acceleration[0] < 0 ? -airAcceleration : airAcceleration : 0)
+            if (!stopping) {
+                xAcceleration = (character.acceleration[0] ? character.acceleration[0] < 0 ? -airAcceleration : airAcceleration : 0);
+            }
             acidgame.physics.setAcceleration(character, xAcceleration, gravity);
             acidgame.physics.setAirborne(character, true);
             playAnimation('jump' + direction);
@@ -140,7 +142,10 @@
         var xVelocity = character.velocity[0], deceleration;
         if (!keyDown.right && !keyDown.left) {
             stopping = true;
-            if (!character.isAirborne) {
+            if (character.isAirborne) {
+                acidgame.physics.setXAcceleration(character, 0);
+            }
+            else {
                 deceleration = xVelocity ? xVelocity < 0 ? groundAcceleration : -groundAcceleration : 0;
                 acidgame.physics.setAcceleration(character, deceleration, 0);
             }
