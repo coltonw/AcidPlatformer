@@ -89,9 +89,11 @@
     }
 
     function handleJumpStart() {
+        var xAcceleration;
         if (!character.isAirborne) {
             acidgame.physics.setYVelocity(character, initialJumpVelocity);
-            acidgame.physics.setAcceleration(character, 0, gravity);
+            var xAcceleration = (character.acceleration[0] ? character.acceleration[0] < 0 ? -airAcceleration : airAcceleration : 0)
+            acidgame.physics.setAcceleration(character, xAcceleration, gravity);
             acidgame.physics.setAirborne(character, true);
             playAnimation('jump' + direction);
         }
