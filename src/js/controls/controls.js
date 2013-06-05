@@ -69,7 +69,7 @@
                 checkRunStop();
             }
         });
-    }
+    };
 
     acidgame.controls.runCharacter = function() {
         var xVelocity = character.velocity[0];
@@ -86,7 +86,7 @@
                 playCurrentAnimation();
             }
         }
-    }
+    };
 
     function handleJumpStart() {
         var xAcceleration = 0;

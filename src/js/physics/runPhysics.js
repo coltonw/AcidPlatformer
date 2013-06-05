@@ -8,16 +8,23 @@
 
     acidgame.physics = acidgame.physics || {};
 
-    var character, physicsObjects = [], groundHeight;
+    var character, physicsObjects = [], groundHeight, canvasWidth, canvasHeight;
 
-    acidgame.physics.init = function(characterSprite, ground, pxlsPerBlck, fps) {
+    acidgame.physics.init = function(characterSprite, ground, width, height, pxlsPerBlck, fps) {
         groundHeight = ground;
+        canvasWidth = width;
+        canvasHeight = height;
         pixelsPerBlock = pxlsPerBlck;
         framesPerSecond = fps;
         character = acidgame.physics.addRectangleObject(characterSprite, 'character', 1, 0);
         acidgame.physics.setVelocity(character, 0, 0);
         acidgame.physics.setAcceleration(character, 0, 0);
         character.directionMultiplier = 1;
+    };
+
+    acidgame.physics.setCanvasDimensions = function(width, height) {
+        canvasWidth = width;
+        canvasHeight = height;
     };
 
     acidgame.physics.addRectangleObject = function(sprite, hitboxName, x, y) {
@@ -29,7 +36,7 @@
             sprite: sprite,
             hitbox: hitboxName,
             rectangle: new createjs.Rectangle(x, y, width, height)
-        }
+        };
         if (hitboxName) {
             physicsObject.node = acidgame.xSortQueue.add(physicsObject);
         }
@@ -79,7 +86,7 @@
 
     function collide(obj1, obj2) {
         // TODO
-    };
+    }
 
     function doPhysics(physicsObject, reSortQueue) {
         if(physicsObject.velocity) {
@@ -128,7 +135,7 @@
 
     acidgame.physics.setSprite = function(physicsObject) {
         physicsObject.sprite.x = physicsObject.rectangle.x * pixelsPerBlock + ((physicsObject.directionMultiplier && physicsObject.directionMultiplier < 0) ? physicsObject.sprite.getBounds().width: 0);
-        physicsObject.sprite.y = groundHeight - physicsObject.rectangle.y * pixelsPerBlock - physicsObject.rectangle.height * pixelsPerBlock;
+        physicsObject.sprite.y = canvasHeight - groundHeight - physicsObject.rectangle.y * pixelsPerBlock - physicsObject.rectangle.height * pixelsPerBlock;
 
         if (physicsObject.hitbox) {
             acidgame.hitbox.adjust(physicsObject.hitbox, physicsObject.sprite);

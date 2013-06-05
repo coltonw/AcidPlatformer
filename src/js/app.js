@@ -3,17 +3,15 @@
     var assets;
     var stage;
     var w, h;
-    var sky, wendi, wendiPhysics, ground, hill, hill2;
+    var sky, wendi, wendiPhysics, ground, hill, hill2, hillHeight, hill2Height;
     var fps, isStationary, groundHeight, pixelsPerBlock;
 
     acidgame.init = function() {
-        /*if (window.top != window) {
-            document.getElementById("header").style.display = "none";
-        }
+        var canvas = document.getElementById("gameCanvas");
 
-        document.getElementById("loader").className = "loader";*/
+        canvas.width = $(window).width();
+        canvas.height = $(window).height();
 
-        var canvas = document.getElementById("testCanvas")
         stage = new createjs.Stage(canvas);
 
         fps = 40;
@@ -24,6 +22,8 @@
         // grab canvas width and height for later calculations:
         w = canvas.width;
         h = canvas.height;
+
+        $(window).on('resize', resizeCanvas);
 
         assets = [];
 
@@ -48,6 +48,16 @@
         assets.push(event.item);
     }
 
+    function resizeCanvas(event) {
+        var canvas = document.getElementById("gameCanvas");
+        canvas.width = $(window).width();
+        canvas.height = $(window).height();
+        w = canvas.width;
+        h = canvas.height;
+        acidgame.physics.setCanvasDimensions(w, h);
+        redrawBackground();
+    }
+
     function handleComplete() {
         var ss = new createjs.SpriteSheet({
             "animations": {
@@ -69,7 +79,7 @@
         // Set up character starting animation
         wendi.gotoAndPlay("stand");
 
-        acidgame.physics.init(wendi, h - groundHeight, pixelsPerBlock, fps);
+        acidgame.physics.init(wendi, groundHeight, w, h, pixelsPerBlock, fps);
 
         wendiPhysics = acidgame.physics.getCharacter();
 
@@ -80,13 +90,10 @@
             var id = item.id;
             var result = loader.getResult(id);
 
-            if (item.type == createjs.LoadQueue.IMAGE) {
-                var bmp = new createjs.Bitmap(result);
-            }
-
             switch (id) {
                 case "sky":
-                    sky = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,w,h));
+                    sky = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,w,400));
+                    sky.scaleY = Math.max(h/400, 1);
                     break;
                 case "ground":
                     ground = new createjs.Shape();
@@ -96,16 +103,18 @@
                     ground.y = h-groundHeight;
                     break;
                 case "hill":
-                    hill = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,282,59));
+                    hillHeight = 59;
+                    hill = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,282,hillHeight));
                     hill.x = Math.random() * w;
                     hill.scaleX = hill.scaleY = 3;
-                    hill.y = 144;
+                    hill.y = h-groundHeight-hillHeight*hill.scaleY;
                     break;
                 case "hill2":
-                    hill2 = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,212,50));
+                    hill2Height = 50;
+                    hill2 = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,212,hill2Height));
                     hill2.x = Math.random() * w;
                     hill2.scaleX = hill2.scaleY = 3;
-                    hill2.y = 171;
+                    hill2.y = h-groundHeight-hill2Height*hill2.scaleY;
                     break;
             }
         }
@@ -116,6 +125,35 @@
 
         createjs.Ticker.setFPS(fps);
         createjs.Ticker.addEventListener("tick", tick);
+    }
+
+    function redrawBackground() {
+        for(var i=0;i<assets.length;i++) {
+            var item = assets[i];
+            var id = item.id;
+            var result = loader.getResult(id);
+
+            switch (id) {
+                case "sky":
+                    sky.graphics.clear();
+                    sky.graphics.beginBitmapFill(result).drawRect(0,0,w,400);
+                    sky.scaleY = Math.max(h/400, 1);
+                    break;
+                case "ground":
+                    var g = ground.graphics;
+                    g.clear();
+                    g.beginBitmapFill(result);
+                    g.drawRect(0, 0, w+330, groundHeight);
+                    ground.y = h-groundHeight;
+                    break;
+                case "hill":
+                    hill.y = h-groundHeight-hillHeight*hill.scaleY;
+                    break;
+                case "hill2":
+                    hill2.y = h-groundHeight-hill2Height*hill2.scaleY;
+                    break;
+            }
+        }
     }
 
     function tick() {
