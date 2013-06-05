@@ -15,10 +15,6 @@ module.exports = function(grunt) {
             }
         },
 
-        lint: {
-            files: appFiles
-        },
-
         concat: {
             all_libs_tmp: {
                 src: libFiles,
@@ -36,11 +32,13 @@ module.exports = function(grunt) {
         },
 
         jshint: {
+            all: appFiles,
             options: {
-                browser: true
-            },
-            globals: {
-                jQuery: true
+                browser: true,
+                force: true,
+                globals: {
+                    jQuery: true
+                }
             }
         },
 
@@ -79,10 +77,11 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
 
     // load the task in the tasks dir
     grunt.loadTasks('tasks');
 
-    grunt.registerTask('default', ['clean:prebuild', 'less', 'concat:all_libs_tmp', 'concat:app_tmp', 'concat:all', 'clean:postbuild', 'copy:js', 'copy:img', 'copy:html']);
+    grunt.registerTask('default', ['clean:prebuild', 'jshint', 'less', 'concat:all_libs_tmp', 'concat:app_tmp', 'concat:all', 'clean:postbuild', 'copy:js', 'copy:img', 'copy:html']);
 
 };
