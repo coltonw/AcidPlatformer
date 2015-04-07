@@ -1,4 +1,6 @@
 node_bin
 node_modules
-dist
+bower_components
+/lib/jquery
+/dist
 acid.tgz

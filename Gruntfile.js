@@ -1,11 +1,16 @@
 /*global module:false*/
 module.exports = function(grunt) {
-    var libFiles = ['lib/jquery-2.0.0.js', 'lib/PreloadJS/lib/preloadjs-0.3.1.min.js', 'lib/EaselJS/lib/easeljs-0.6.0.min.js', 'lib/EaselJS/src/easeljs/utils/SpriteSheetUtils.js', 'lib/gl-matrix/dist/gl-matrix-min.js'],
+    var libFiles = ['lib/jquery/jquery.js', 'lib/PreloadJS/lib/preloadjs-0.3.1.min.js', 'lib/EaselJS/lib/easeljs-0.6.0.min.js', 'lib/EaselJS/src/easeljs/utils/SpriteSheetUtils.js', 'lib/gl-matrix/dist/gl-matrix-min.js'],
         appFiles = ['src/js/physics/**.js','src/js/controls/**.js','src/js/app.js'],
         allFiles = ['dist/all-libs-tmp.js', 'dist/app-tmp.js'];
 
     // Project configuration.
     grunt.initConfig({
+        bower: {
+            install: {
+               //just run 'grunt bower:install' and you'll see files from your Bower packages in lib directory
+            }
+        },
 
         less: {
             production: {
@@ -78,6 +83,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-bower-task');
 
     // load the task in the tasks dir
     grunt.loadTasks('tasks');
