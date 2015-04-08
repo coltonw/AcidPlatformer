@@ -1,9 +1,0 @@
-[submodule "lib/EaselJS"]
-	path = lib/EaselJS
-	url = git://github.com/CreateJS/EaselJS.git
-[submodule "lib/PreloadJS"]
-	path = lib/PreloadJS
-	url = git://github.com/CreateJS/PreloadJS.git
-[submodule "lib/gl-matrix"]
-	path = lib/gl-matrix
-	url = git://github.com/toji/gl-matrix.git

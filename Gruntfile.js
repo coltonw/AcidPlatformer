@@ -1,6 +1,6 @@
 /*global module:false*/
 module.exports = function(grunt) {
-    var libFiles = ['lib/jquery/jquery.js', 'lib/PreloadJS/lib/preloadjs-0.3.1.min.js', 'lib/EaselJS/lib/easeljs-0.6.0.min.js', 'lib/EaselJS/src/easeljs/utils/SpriteSheetUtils.js', 'lib/gl-matrix/dist/gl-matrix-min.js'],
+    var libFiles = ['lib/jquery/jquery.js', 'lib/PreloadJS/preloadjs-0.6.0.combined.js', 'lib/easeljs/easeljs-0.8.0.combined.js', 'lib/gl-matrix/gl-matrix.js'],
         appFiles = ['src/js/physics/**.js','src/js/controls/**.js','src/js/app.js'],
         allFiles = ['dist/all-libs-tmp.js', 'dist/app-tmp.js'];
 
@@ -88,6 +88,6 @@ module.exports = function(grunt) {
     // load the task in the tasks dir
     grunt.loadTasks('tasks');
 
-    grunt.registerTask('default', ['clean:prebuild', 'jshint', 'less', 'concat:all_libs_tmp', 'concat:app_tmp', 'concat:all', 'clean:postbuild', 'copy:js', 'copy:img', 'copy:html']);
+    grunt.registerTask('default', ['clean:prebuild', 'jshint', 'less', 'bower:install', 'concat:all_libs_tmp', 'concat:app_tmp', 'concat:all', 'clean:postbuild', 'copy:js', 'copy:img', 'copy:html']);
 
 };

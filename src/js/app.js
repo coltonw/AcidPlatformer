@@ -38,8 +38,8 @@
         ];
 
         loader = new createjs.LoadQueue(false);
-        loader.onFileLoad = handleFileLoad;
-        loader.onComplete = handleComplete;
+        loader.on('fileload', handleFileLoad);
+        loader.on('complete', handleComplete);
         loader.loadManifest(manifest);
         stage.autoClear = false;
     };
@@ -61,7 +61,7 @@
     function handleComplete() {
         var ss = new createjs.SpriteSheet({
             "animations": {
-                "run": [0, 9, "run", 2],
+                "run": [0, 9, "run", 0.5],
                 "jump": {
                     frames: [0, 1, 2],
                     next: "airborne",
@@ -74,7 +74,7 @@
             "frames": {"height": 125, "width": 125}
         });
         createjs.SpriteSheetUtils.addFlippedFrames(ss, true);
-        wendi = new createjs.BitmapAnimation(ss);
+        wendi = new createjs.Sprite(ss);
 
         // Set up character starting animation
         wendi.gotoAndPlay("stand");
