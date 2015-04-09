@@ -86,9 +86,10 @@
         acidgame.controls.init(wendiPhysics, fps);
 
         for(var i=0;i<assets.length;i++) {
-            var item = assets[i];
-            var id = item.id;
-            var result = loader.getResult(id);
+            var item = assets[i],
+                id = item.id,
+                result = loader.getResult(id),
+                hillScale, hillY;
 
             switch (id) {
                 case "sky":
@@ -104,17 +105,17 @@
                     break;
                 case "hill":
                     hillHeight = 59;
-                    hill = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,282,hillHeight));
-                    hill.x = Math.random() * w;
-                    hill.scaleX = hill.scaleY = 3;
-                    hill.y = h-groundHeight-hillHeight*hill.scaleY;
+                    hillScale = 3;
+                    hillY = h-groundHeight-hillHeight*hillScale;
+                    hill = new createjs.Bitmap(result);
+                    hill.setTransform(Math.random() * w, hillY, hillScale, hillScale);
                     break;
                 case "hill2":
                     hill2Height = 50;
-                    hill2 = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,212,hill2Height));
-                    hill2.x = Math.random() * w;
-                    hill2.scaleX = hill2.scaleY = 3;
-                    hill2.y = h-groundHeight-hill2Height*hill2.scaleY;
+                    hillScale = 3;
+                    hillY = h-groundHeight-hill2Height*hillScale;
+                    hill2 = new createjs.Bitmap(result);
+                    hill2.setTransform(Math.random() * w, hillY, hillScale, hillScale);
                     break;
             }
         }

@@ -4,7 +4,6 @@ This is a simple javascript platformer that may evolve over time to be something
 
 ## To do
 
- * Convert from using git submodules to using bower.
  * Convert from EaselJS to the latest hotness. [Pixi.js possibly?](http://www.pixijs.com/)
  * Move from grunt to gulp.
  * Restyle js to be 2 spaces instead of 4.
