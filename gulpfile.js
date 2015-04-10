@@ -3,11 +3,14 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     less = require('gulp-less'),
     mainBowerFiles = require('main-bower-files'),
-    sourcemaps = require('gulp-sourcemaps'),
+    gulpIgnore = require('gulp-ignore'),
     merge = require('merge-stream'),
+    sourcemaps = require('gulp-sourcemaps'),
     concat = require('gulp-concat'),
-    uglify = require('gulp-uglify');
+    uglify = require('gulp-uglify'),
+    imagemin = require('gulp-imagemin');
 
+var print = require('gulp-print');
 
 gulp.task('clean', function (cb) {
   del(['dist'], cb);
@@ -28,10 +31,14 @@ gulp.task('less', ['clean'], function () {
     .pipe(gulp.dest('./dist/css'));
 });
 
-gulp.task('build', ['clean'], function() {
+gulp.task('build:js', ['clean'], function() {
     var bowerFiles = gulp.src(mainBowerFiles());
+    var jqueryFiles = bowerFiles
+      .pipe(gulpIgnore.include('bower_components/jquery/**'));
+    var otherFiles = bowerFiles
+      .pipe(gulpIgnore.exclude('bower_components/jquery/**'));
     var appFiles = gulp.src('./src/js/**/*.js');
-    return merge(bowerFiles, appFiles)
+    return merge(jqueryFiles, otherFiles, appFiles)
       .pipe(sourcemaps.init())
       .pipe(concat('script.js'))
       .pipe(uglify())
@@ -39,6 +46,17 @@ gulp.task('build', ['clean'], function() {
       .pipe(gulp.dest('dist/js'));
 });
 
-gulp.task('default', ['clean', 'lint', 'less', 'build'], function() {
-  // place code for your default task here
+gulp.task('build:img', ['clean'], function () {
+  return gulp.src('./src/img/**/*.{svg,png,gif,jpg,ico}')
+    .pipe(imagemin())
+    .pipe(gulp.dest('./dist/img'));
+});
+
+gulp.task('build:html', ['clean'], function() {
+    return gulp.src('src/*.html')
+      .pipe(gulp.dest('dist'));
+});
+
+gulp.task('default', ['clean', 'lint', 'less', 'build:js', 'build:img', 'build:html'], function() {
+  // Any additional default tasks can go here
 });
