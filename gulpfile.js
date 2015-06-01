@@ -3,12 +3,13 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     less = require('gulp-less'),
     mainBowerFiles = require('main-bower-files'),
-    gulpIgnore = require('gulp-ignore'),
-    merge = require('merge-stream'),
     sourcemaps = require('gulp-sourcemaps'),
     concat = require('gulp-concat'),
     uglify = require('gulp-uglify'),
-    imagemin = require('gulp-imagemin');
+    imagemin = require('gulp-imagemin'),
+    streamqueue = require('streamqueue');
+
+var print = require('gulp-print');
 
 gulp.task('clean', function (cb) {
   del(['dist'], cb);
@@ -30,13 +31,13 @@ gulp.task('less', ['clean'], function () {
 });
 
 gulp.task('build:js', ['clean'], function() {
-    var bowerFiles = gulp.src(mainBowerFiles());
-    var jqueryFiles = bowerFiles
-      .pipe(gulpIgnore.include('bower_components/jquery/**'));
-    var otherFiles = bowerFiles
-      .pipe(gulpIgnore.exclude('bower_components/jquery/**'));
+    var jqueryFiles = gulp.src(mainBowerFiles({filter: /jquery/}), { base: 'bower_components' });
+    var notJquery = function(file) {
+      return !/jquery/.test(file);
+    };
+    var otherFiles = gulp.src(mainBowerFiles({filter: notJquery}), { base: 'bower_components' });
     var appFiles = gulp.src('./src/js/**/*.js');
-    return merge(jqueryFiles, otherFiles, appFiles)
+    return streamqueue({ objectMode: true }, jqueryFiles, otherFiles, appFiles)
       .pipe(sourcemaps.init())
       .pipe(concat('script.js'))
       .pipe(uglify())
