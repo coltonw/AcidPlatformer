@@ -10,8 +10,6 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     imagemin = require('gulp-imagemin');
 
-var print = require('gulp-print');
-
 gulp.task('clean', function (cb) {
   del(['dist'], cb);
 });
