@@ -2,9 +2,11 @@
 
 This is a simple javascript platformer that may evolve over time to be something more.
 
-## How to run
+## First time project setup
+Run `npm install`, then run `bower install`.
 
-To build the project, first run `npm install` then run `gulp`.
+## How to run
+First, build the project by running `gulp`.
 
 Once all the files are built and in the `dist` folder, run a simple http server from there and open game.html. For an easy to setup and run server, I recommend [http-server](https://github.com/indexzero/http-server).
 

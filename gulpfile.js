@@ -9,8 +9,6 @@ var gulp = require('gulp'),
     imagemin = require('gulp-imagemin'),
     streamqueue = require('streamqueue');
 
-var print = require('gulp-print');
-
 gulp.task('clean', function (cb) {
   del(['dist'], cb);
 });
