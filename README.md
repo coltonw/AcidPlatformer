@@ -13,7 +13,6 @@ Once all the files are built and in the `dist` folder, run a simple http server 
 ## To do
 
 * Convert from EaselJS to the latest hotness. [Pixi.js possibly?](http://www.pixijs.com/)
-* Remove grunt build from the repo and from package.json.
 * Restyle js to follow [Airbnb style guide](https://github.com/airbnb/javascript). Use [JSCS](http://jscs.info/) (possibly with a gulp plugin) to enforce.
 * Add gamepad support using [JavaScript Gamepad API](https://developer.mozilla.org/en-US/docs/Web/Guide/API/Gamepad).
 * Add next game features: larger level, background parallax, physics collisions, player damage or death, obstacles and enemies, enemy AI, character fighting controlls, ally AI.
