@@ -12,11 +12,14 @@ Once all the files are built and in the `dist` folder, run a simple http server 
 
 ## To do
 
-* Convert from EaselJS to the latest hotness. [Pixi.js possibly?](http://www.pixijs.com/)
-* Restyle js to follow [Airbnb style guide](https://github.com/airbnb/javascript). Use [JSCS](http://jscs.info/) (possibly with a gulp plugin) to enforce.
-* Add gamepad support using [JavaScript Gamepad API](https://developer.mozilla.org/en-US/docs/Web/Guide/API/Gamepad).
-* Add next game features: larger level, background parallax, physics collisions, player damage or death, obstacles and enemies, enemy AI, character fighting controlls, ally AI.
-* Add testing.
+* Larger level
+* Background parallax
+* Physics collisions
+* Player damage or death
+* Obstacles and enemies
+* Enemy AI
+* Character fighting controls
+* Ally AI
 
 ### Optional
 
