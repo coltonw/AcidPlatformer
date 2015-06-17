@@ -30,8 +30,8 @@
   acidgame.physics.addRectangleObject = function(sprite, hitboxName, x, y) {
     x = x || 0;
     y = y || 0;
-    var width = ((hitboxName)? acidgame.hitbox.getWidth(hitboxName) : sprite.width) / pixelsPerBlock;
-    var height = ((hitboxName)? acidgame.hitbox.getHeight(hitboxName) : sprite.height) / pixelsPerBlock;
+    var width = ((hitboxName) ? acidgame.hitbox.getWidth(hitboxName) : sprite.width) / pixelsPerBlock;
+    var height = ((hitboxName) ? acidgame.hitbox.getHeight(hitboxName) : sprite.height) / pixelsPerBlock;
     var physicsObject = {
       sprite: sprite,
       hitbox: hitboxName,
@@ -75,7 +75,7 @@
     }
 
     // Add back in all the nodes that moved
-    for(i=0;i<reSortQueue.length;i++) {
+    for (i = 0; i < reSortQueue.length; i++) {
       acidgame.xSortQueue.reAdd(reSortQueue[i], reSortQueue[i].prev);
     }
   };

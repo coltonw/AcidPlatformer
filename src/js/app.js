@@ -73,6 +73,7 @@
       "images": [loader.getResult('wendi'), loader.getResult('wendiJump'), loader.getResult('wendiStand')],
       "frames": {"height": 125, "width": 125}
     });
+    var i;
     createjs.SpriteSheetUtils.addFlippedFrames(ss, true);
     wendi = new createjs.Sprite(ss);
 
@@ -85,7 +86,7 @@
 
     acidgame.controls.init(wendiPhysics, fps);
 
-    for(var i=0;i<assets.length;i++) {
+    for(i = 0; i < assets.length; i++) {
       var item = assets[i],
           id = item.id,
           result = loader.getResult(id),
@@ -93,14 +94,14 @@
 
       switch (id) {
         case "sky":
-          sky = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0,0,w,400));
-          sky.scaleY = Math.max(h/400, 1);
+          sky = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, w, 400));
+          sky.scaleY = Math.max(h / 400, 1);
           break;
         case "ground":
           ground = new createjs.Shape();
           var g = ground.graphics;
           g.beginBitmapFill(result);
-          g.drawRect(0, 0, w+330, groundHeight);
+          g.drawRect(0, 0, w + 330, groundHeight);
           ground.y = h-groundHeight;
           break;
         case "hill":
@@ -129,7 +130,8 @@
   }
 
   function redrawBackground() {
-    for(var i=0;i<assets.length;i++) {
+    var i;
+    for (i = 0; i < assets.length; i++) {
       var item = assets[i];
       var id = item.id;
       var result = loader.getResult(id);
@@ -137,8 +139,8 @@
       switch (id) {
         case "sky":
           sky.graphics.clear();
-          sky.graphics.beginBitmapFill(result).drawRect(0,0,w,400);
-          sky.scaleY = Math.max(h/400, 1);
+          sky.graphics.beginBitmapFill(result).drawRect(0, 0, w, 400);
+          sky.scaleY = Math.max(h / 400, 1);
           break;
         case "ground":
           var g = ground.graphics;
