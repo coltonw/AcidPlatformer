@@ -2,12 +2,23 @@
 
   var assets;
   var stage;
-  var w, h;
-  var sky, wendi, wendiPhysics, ground, hill, hill2, hillHeight, hill2Height;
-  var fps, isStationary, groundHeight, pixelsPerBlock;
+  var w;
+  var h;
+  var sky
+  var wendi
+  var wendiPhysics
+  var ground
+  var hill
+  var hill2
+  var hillHeight
+  var hill2Height;
+  var fps
+  var isStationary
+  var groundHeight
+  var pixelsPerBlock;
 
   acidgame.init = function() {
-    var canvas = document.getElementById("gameCanvas");
+    var canvas = document.getElementById('gameCanvas');
 
     canvas.width = $(window).width();
     canvas.height = $(window).height();
@@ -28,13 +39,13 @@
     assets = [];
 
     manifest = [
-      {src:"img/wendi/wendiWalk.png", id:"wendi"},
-      {src:"img/wendi/wendiJump.png", id:"wendiJump"},
-      {src:"img/wendi/wendiStand.png", id:"wendiStand"},
-      {src:"img/sky.png", id:"sky"},
-      {src:"img/ground.png", id:"ground"},
-      {src:"img/parallaxHill1.png", id:"hill"},
-      {src:"img/parallaxHill2.png", id:"hill2"}
+      {src:'img/wendi/wendiWalk.png', id:'wendi'},
+      {src:'img/wendi/wendiJump.png', id:'wendiJump'},
+      {src:'img/wendi/wendiStand.png', id:'wendiStand'},
+      {src:'img/sky.png', id:'sky'},
+      {src:'img/ground.png', id:'ground'},
+      {src:'img/parallaxHill1.png', id:'hill'},
+      {src:'img/parallaxHill2.png', id:'hill2'}
     ];
 
     loader = new createjs.LoadQueue(false);
@@ -49,7 +60,7 @@
   }
 
   function resizeCanvas(event) {
-    var canvas = document.getElementById("gameCanvas");
+    var canvas = document.getElementById('gameCanvas');
     canvas.width = $(window).width();
     canvas.height = $(window).height();
     w = canvas.width;
@@ -60,25 +71,25 @@
 
   function handleComplete() {
     var ss = new createjs.SpriteSheet({
-      "animations": {
-        "run": [0, 9, "run", 0.5],
-        "jump": {
-            frames: [0, 1, 2],
-            next: "airborne",
-            frequency: 2
+      animations: {
+        run: [0, 9, 'run', 0.5],
+        jump: {
+          frames: [0, 1, 2],
+          next: 'airborne',
+          frequency: 2
         },
-        "airborne": 12,
-        "stand": 13
+        airborne: 12,
+        stand: 13
       },
-      "images": [loader.getResult('wendi'), loader.getResult('wendiJump'), loader.getResult('wendiStand')],
-      "frames": {"height": 125, "width": 125}
+      images: [loader.getResult('wendi'), loader.getResult('wendiJump'), loader.getResult('wendiStand')],
+      frames: {height: 125, width: 125}
     });
     var i;
     createjs.SpriteSheetUtils.addFlippedFrames(ss, true);
     wendi = new createjs.Sprite(ss);
 
     // Set up character starting animation
-    wendi.gotoAndPlay("stand");
+    wendi.gotoAndPlay('stand');
 
     acidgame.physics.init(wendi, groundHeight, w, h, pixelsPerBlock, fps);
 
@@ -86,47 +97,48 @@
 
     acidgame.controls.init(wendiPhysics, fps);
 
-    for(i = 0; i < assets.length; i++) {
-      var item = assets[i],
-          id = item.id,
-          result = loader.getResult(id),
-          hillScale, hillY;
+    for (i = 0; i < assets.length; i++) {
+      var item = assets[i];
+      var id = item.id;
+      var result = loader.getResult(id);
+      var hillScale;
+      var hillY;
 
       switch (id) {
-        case "sky":
+        case 'sky':
           sky = new createjs.Shape(new createjs.Graphics().beginBitmapFill(result).drawRect(0, 0, w, 400));
           sky.scaleY = Math.max(h / 400, 1);
           break;
-        case "ground":
+        case 'ground':
           ground = new createjs.Shape();
           var g = ground.graphics;
           g.beginBitmapFill(result);
           g.drawRect(0, 0, w + 330, groundHeight);
-          ground.y = h-groundHeight;
+          ground.y = h - groundHeight;
           break;
-        case "hill":
+        case 'hill':
           hillHeight = 59;
           hillScale = 3;
-          hillY = h-groundHeight-hillHeight*hillScale;
+          hillY = h - groundHeight - hillHeight * hillScale;
           hill = new createjs.Bitmap(result);
           hill.setTransform(Math.random() * w, hillY, hillScale, hillScale);
           break;
-        case "hill2":
+        case 'hill2':
           hill2Height = 50;
           hillScale = 3;
-          hillY = h-groundHeight-hill2Height*hillScale;
+          hillY = h - groundHeight - hill2Height * hillScale;
           hill2 = new createjs.Bitmap(result);
           hill2.setTransform(Math.random() * w, hillY, hillScale, hillScale);
           break;
       }
     }
 
-    document.getElementById("loader").className = "";
+    document.getElementById('loader').className = '';
 
     stage.addChild(sky, ground, hill, hill2, wendi);
 
     createjs.Ticker.setFPS(fps);
-    createjs.Ticker.addEventListener("tick", tick);
+    createjs.Ticker.addEventListener('tick', tick);
   }
 
   function redrawBackground() {
@@ -137,23 +149,23 @@
       var result = loader.getResult(id);
 
       switch (id) {
-        case "sky":
+        case 'sky':
           sky.graphics.clear();
           sky.graphics.beginBitmapFill(result).drawRect(0, 0, w, 400);
           sky.scaleY = Math.max(h / 400, 1);
           break;
-        case "ground":
+        case 'ground':
           var g = ground.graphics;
           g.clear();
           g.beginBitmapFill(result);
-          g.drawRect(0, 0, w+330, groundHeight);
-          ground.y = h-groundHeight;
+          g.drawRect(0, 0, w + 330, groundHeight);
+          ground.y = h - groundHeight;
           break;
-        case "hill":
-          hill.y = h-groundHeight-hillHeight*hill.scaleY;
+        case 'hill':
+          hill.y = h - groundHeight - hillHeight * hill.scaleY;
           break;
-        case "hill2":
-          hill2.y = h-groundHeight-hill2Height*hill2.scaleY;
+        case 'hill2':
+          hill2.y = h - groundHeight - hill2Height * hill2.scaleY;
           break;
       }
     }

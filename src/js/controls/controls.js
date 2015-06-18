@@ -2,29 +2,41 @@
 
   acidgame.controls = acidgame.controls || {};
 
-  var character,
-      groundAcceleration = 48, // blocks per second per second
-      airAcceleration = 36, // blocks per second per second
-      maxRunSpeed = 12, // blocks per second
+  var character;
 
-      maxRunPerFrame,
+  // blocks per second per second
+  var groundAcceleration = 48;
 
-      currentAnimationKey = 'stand',
-      previousAnimation = '',
-      direction = '', // can be empty string or _h
-      stopping = true,
-      keyDown = {
-        up: false,
-        right: false,
-        left: false
-      },
+  // blocks per second per second
+  var airAcceleration = 36;
 
-      //TODO: Calculate jump based on these constants
-      minJumpHeight = 2.1, // blocks
-      maxJumpHeight = 8.1, // blocks
-      maxJumpTime = 2,  // seconds
-      gravity = -40,  // TODO: calculate this!!!
-      initialJumpVelocity = 20; // TODO: calculate this!!!
+  // blocks per second
+  var maxRunSpeed = 12;
+
+  var maxRunPerFrame;
+
+  var currentAnimationKey = 'stand';
+  var previousAnimation = '';
+
+  // can be empty string or _h
+  var direction = '';
+  var stopping = true;
+  var keyDown = {
+      up: false,
+      right: false,
+      left: false
+    };
+
+  /*
+   * TODO: Calculate jump based on these constants
+   * TODO: Calculate gravity and initial jump velocity
+   * heights in bocks and times in seconds
+   */
+  var minJumpHeight = 2.1;
+  var maxJumpHeight = 8.1;
+  var maxJumpTime = 2;
+  var gravity = -40;
+  var initialJumpVelocity = 20;
 
   acidgame.controls.init = function(theCharacter, fps) {
     character = theCharacter;
@@ -33,18 +45,21 @@
 
     character.onGroundCollision = handleJumpStop;
     $('body').on('keydown', function(event) {
-      if (event.which === 38 || event.which === 87) { // up arrow and 'w' key
+      if (event.which === 38 || event.which === 87) {
+        // up arrow and 'w' key
         event.preventDefault();
         keyDown.up = true;
         handleJumpStart();
       }
-      else if (event.which === 39 ||  event.which === 68) { // right arrow and 'd' key
+      else if (event.which === 39 ||  event.which === 68) {
+        // right arrow and 'd' key
         event.preventDefault();
         direction = '';
         keyDown.right = true;
         handleRunStart();
       }
-      else if (event.which === 37 ||  event.which === 65) { // left arrow and 'a' key
+      else if (event.which === 37 ||  event.which === 65) {
+        // left arrow and 'a' key
         event.preventDefault();
         direction = '_h';
         keyDown.left = true;
@@ -53,17 +68,21 @@
     });
 
     $('body').on('keyup', function(event) {
-      if (event.which === 38 || event.which === 87) { // up arrow and 'w' key
+      if (event.which === 38 || event.which === 87) {
+        // up arrow and 'w' key
         event.preventDefault();
         keyDown.up = false;
+
         // TODO: different heights of jumps
       }
-      else if (event.which === 39 ||  event.which === 68) { // right arrow and 'd' key
+      else if (event.which === 39 ||  event.which === 68) {
+        // right arrow and 'd' key
         event.preventDefault();
         keyDown.right = false;
         checkRunStop();
       }
-      else if (event.which === 37 ||  event.which === 65) { // left arrow and 'a' key
+      else if (event.which === 37 ||  event.which === 65) {
+        // left arrow and 'a' key
         event.preventDefault();
         keyDown.left = false;
         checkRunStop();
@@ -79,7 +98,9 @@
     }
     if (!character.isAirborne && stopping) {
       xAcceleration = character.acceleration[0];
-      if ((xAcceleration ? xAcceleration < 0 ? -1 : 1 : 0) === (xVelocity ? xVelocity < 0 ? -1 : 1 : 0)) {  // Check if signs are equal
+
+      // Check if signs are equal
+      if ((xAcceleration ? xAcceleration < 0 ? -1 : 1 : 0) === (xVelocity ? xVelocity < 0 ? -1 : 1 : 0)) {
         acidgame.physics.setVelocity(character, 0, 0);
         acidgame.physics.setAcceleration(character, 0, 0);
         currentAnimationKey = 'stand';
@@ -139,7 +160,8 @@
   }
 
   function checkRunStop() {
-    var xVelocity = character.velocity[0], deceleration;
+    var xVelocity = character.velocity[0];
+    var deceleration;
     if (!keyDown.right && !keyDown.left) {
       stopping = true;
       if (character.isAirborne) {
@@ -150,8 +172,9 @@
         acidgame.physics.setAcceleration(character, deceleration, 0);
       }
     }
-    else {
-      // TODO: handle if was holding other arrow down when you let go.
-    }
+
+    /*else {
+      TODO: handle if was holding other arrow down when you let go.
+    }*/
   }
 }(window.acidgame = window.acidgame || {}, jQuery));

@@ -1,4 +1,4 @@
-(function( acidgame, $, undefined ) {
+(function(acidgame, $, undefined) {
 
   /**
    * Hitboxes all laid out in pixels

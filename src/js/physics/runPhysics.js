@@ -4,11 +4,16 @@
    * Physics engine will handle distances in blocks and times in seconds (rather than pixels and frames)  This will allow easy adjustment later.
    */
 
-  var pixelsPerBlock = 40, framesPerSecond = 40;
+  var pixelsPerBlock = 40
+  var framesPerSecond = 40;
 
   acidgame.physics = acidgame.physics || {};
 
-  var character, physicsObjects = [], groundHeight, canvasWidth, canvasHeight;
+  var character;
+  var physicsObjects = [];
+  var groundHeight;
+  var canvasWidth;
+  var canvasHeight;
 
   acidgame.physics.init = function(characterSprite, ground, width, height, pxlsPerBlck, fps) {
     groundHeight = ground;
@@ -45,7 +50,11 @@
   };
 
   acidgame.physics.run = function() {
-    var current = acidgame.xSortQueue.getHead(), iter, rightX, reSortQueue = [], i;
+    var current = acidgame.xSortQueue.getHead()
+    var iter
+    var rightX
+    var reSortQueue = []
+    var i;
     while (current !== null) {
       // Check ground collision
       if (current.val.isAirborne && current.val.rectangle.y < 0) {
@@ -54,7 +63,8 @@
         current.val.acceleration[1] = 0;
         current.val.velocity[1] = 0;
         if (current.val.onGroundCollision) {
-          current.val.onGroundCollision(); // perhpas make some sort of event handler if more of these are added.
+          // perhaps make some sort of event handler if more of these are added.
+          current.val.onGroundCollision();
         }
       }
 
